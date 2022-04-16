@@ -1,57 +1,112 @@
 import { useState } from 'react'
-import logo from './logo.svg'
 import './App.css'
 
 function App() {
-  const [message, setMessage] = useState('')
+  const [data, setData] = useState('');
+  const [ttl, setTtl] = useState(86400000000000);
   const [isActiveHour, setActiveHour] = useState(false);
-  const [isActiveDay, setActiveDay] = useState(false);
+  const [isActiveDay, setActiveDay] = useState(true);
   const [isActiveWeek, setActiveWeek] = useState(false);
+  const [textAreaReadonly, setTextAreaReadonly] = useState(false);
+  const [linkID, setLinkID] = useState('');
+  const [secret, setSecret] = useState('');
+  const secretMessage = useState(() => {
+    if (window.location.pathname.includes('reveal')) {
+      fetch(`https://secret-redis.herokuapp.com/secret/${window.location.pathname.split('/')[2]}`).then(res => res.text()).then(res => {
+        console.log(res)
+        setSecret(res)
+        return res;
+      }).catch(err => console.log(err));
+    }
+  });
+  const domainName = window.location.origin;
 
   const toggleHour = () => {
-    setActiveHour(!isActiveHour);
+    setActiveHour(true);
     setActiveDay(false);
     setActiveWeek(false);
+    setTtl(3600000000000);
   };
 
   const toggleDay = () => {
-    setActiveDay(!isActiveDay);
+    setActiveDay(true);
     setActiveHour(false);
     setActiveWeek(false);
+    setTtl(86400000000000);
   };
 
   const toggleWeek = () => {
-    setActiveWeek(!isActiveWeek);
+    setActiveWeek(true);
     setActiveHour(false);
     setActiveDay(false);
+    setTtl(604800000000000);
+  };
+
+  const copyToClipBoard = () => {
+    navigator.clipboard.writeText(domainName + '/reveal/' + linkID).then(() => {
+      console.log('Copied to clipboard');
+    }).catch(err => {
+      console.log('Error: ', err);
+    });
+  };
+
+  const copySecretToClipBoard = () => {
+    navigator.clipboard.writeText(secret).then(() => {
+      console.log('Copied to clipboard');
+    }).catch(err => {
+      console.log('Error: ', err);
+    });
+  };
+
+
+  const createSecret = async () => {
+    await fetch('https://secret-redis.herokuapp.com/secret', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data,
+        ttl
+      })
+    })
+      .then(res => res.text())
+      .then(res => {
+        setTextAreaReadonly(true);
+        setLinkID(res);
+      })
+      .catch(err => console.log(err));
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h2>Secret Message</h2>
-        <p>Lifetime</p>
-        <div className="btn-group">
-          <button onClick={toggleHour} className={isActiveHour ? 'active': undefined}>1 Hour</button>
-          <button onClick={toggleDay} className={isActiveDay ? 'active': undefined}>1 Day</button>
-          <button onClick={toggleWeek} className={isActiveWeek ? 'active': undefined}>1 Week</button>
-        </div>
-        <textarea className='textarea-responsive' placeholder='Secret message goes here...' value={message} onChange={(e) => setMessage(e.target.value)} />
-        <p>
-          <button type="button" onClick={() => console.log(message)}>
-            Create Secret
-          </button>
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
+        <h2><a href={`${window.location.origin}`} className='App-link'>Secret Message</a></h2>
+        {document.location.pathname.includes('reveal') ? (
+          <div className='div-header'>
+            <textarea readOnly className='textarea-responsive' value={secret}></textarea>
+            <p>
+              <button onClick={copySecretToClipBoard}>Copy to clipboard</button>
+            </p>
+          </div>
+        ) : (
+          <div className='div-header'>
+            <p>Lifetime</p>
+            <div className="btn-group">
+              <button onClick={toggleHour} className={isActiveHour ? 'active' : undefined}>1 Hour</button>
+              <button onClick={toggleDay} className={isActiveDay ? 'active' : undefined}>1 Day</button>
+              <button onClick={toggleWeek} className={isActiveWeek ? 'active' : undefined}>1 Week</button>
+            </div>
+            <textarea readOnly={textAreaReadonly} className='textarea-responsive' placeholder='Secret message goes here...' value={data} onChange={(e) => setData(e.target.value)} />
+            <p>
+              {linkID != '' ? <button type="button" onClick={() => copyToClipBoard()}>Copy Link</button> : <button type="button" disabled={data.trim().length == 0} onClick={() => createSecret()}>
+                Create Secret
+              </button>}
+            </p>
+          </div>
+        )}
+
+
       </header>
     </div>
   )

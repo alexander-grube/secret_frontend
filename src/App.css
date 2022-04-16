@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,34 +13,36 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.div-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App-link {
+  color: #61dafb;
+  text-decoration: none;
 }
 
 button {
   font-size: calc(10px + 2vmin);
 }
 
-.btn-group button {
-  background-color: #61dafb; /* Green background */
-  border: 1px solid rgb(6, 160, 160); /* Green border */
-  color: #282c34; /* White text */
-  padding: 10px 24px; /* Some padding */
-  cursor: pointer; /* Pointer/hand icon */
-  float: left; /* Float the buttons side by side */
+button {
+  background-color: #61dafb;
+  border: 1px solid rgb(6, 160, 160);
+  color: #282c34;
+  padding: 10px 24px;
+  cursor: pointer;
+  float: left; 
 }
 
 .btn-group button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
+  border-right: none;
 }
 
 /* Clear floats (clearfix hack) */
@@ -61,7 +52,6 @@ button {
   display: table;
 }
 
-/* Add a background color on hover */
 .btn-group button:hover {
   background-color: #2b7fa6;
 }
@@ -78,6 +68,7 @@ button {
   
   width: 768px;
   min-height: 150px;
+  font-size: calc(10px + 2vmin);
 }
 
 @media screen and (max-width: 768px) {
