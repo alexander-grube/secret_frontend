@@ -40,3 +40,49 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+.btn-group button {
+  background-color: #61dafb; /* Green background */
+  border: 1px solid rgb(6, 160, 160); /* Green border */
+  color: #282c34; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #2b7fa6;
+}
+
+.btn-group button.active {
+  background-color: #2b7fa6;
+}
+
+.btn-group {
+  padding-bottom: 15px;
+}
+
+.textarea-responsive {
+  
+  width: 768px;
+  min-height: 150px;
+}
+
+@media screen and (max-width: 768px) {
+  .textarea-responsive {
+    width: 90%;
+  }
+}
+  
