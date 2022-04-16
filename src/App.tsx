@@ -11,8 +11,8 @@ function App() {
   const [linkID, setLinkID] = useState('');
   const [secret, setSecret] = useState('');
   const secretMessage = useState(() => {
-    if (window.location.pathname.includes('reveal')) {
-      fetch(`https://secret-redis.herokuapp.com/secret/${window.location.pathname.split('/')[2]}`).then(res => res.text()).then(res => {
+    if (window.location.search.includes('reveal')) {
+      fetch(`https://secret-redis.herokuapp.com/secret/${location.search.split('reveal=')[1]}`).then(res => res.text()).then(res => {
         console.log(res)
         setSecret(res)
         return res;
@@ -43,7 +43,7 @@ function App() {
   };
 
   const copyToClipBoard = () => {
-    navigator.clipboard.writeText(domainName + '/reveal/' + linkID).then(() => {
+    navigator.clipboard.writeText(domainName + '?reveal=' + linkID).then(() => {
       console.log('Copied to clipboard');
     }).catch(err => {
       console.log('Error: ', err);
@@ -82,7 +82,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h2><a href={`${window.location.origin}`} className='App-link'>Secret Message</a></h2>
-        {document.location.pathname.includes('reveal') ? (
+        {document.location.search.includes('reveal') ? (
           <div className='div-header'>
             <textarea readOnly className='textarea-responsive' value={secret}></textarea>
             <p>
