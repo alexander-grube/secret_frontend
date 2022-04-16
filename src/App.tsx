@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import CryptoJS from 'crypto-js'
 import './App.css'
 
 function App() {
@@ -12,11 +13,13 @@ function App() {
   const [secret, setSecret] = useState('');
   const secretMessage = useState(() => {
     if (window.location.search.includes('reveal')) {
-      fetch(`https://secret-redis.herokuapp.com/secret/${location.search.split('reveal=')[1]}`).then(res => res.text()).then(res => {
-        console.log(res)
-        setSecret(res)
-        return res;
-      }).catch(err => console.log(err));
+      fetch(`https://secret-redis.herokuapp.com/secret/${location.search.split('reveal=')[1].split('_')[0]}`).then(res => res.text()).then(res => {
+        const key1 = location.search.split('reveal=')[1].split('_')[1];
+        const key2 = res.split('_')[1];
+        setSecret(CryptoJS.AES.decrypt(res, key1+key2).toString(CryptoJS.enc.Utf8));
+      }).catch(err => {
+        console.log("ERROR:", err)
+        });
     }
   });
   const domainName = window.location.origin;
@@ -60,20 +63,25 @@ function App() {
 
 
   const createSecret = async () => {
+    const randomKey = CryptoJS.lib.WordArray.random(128 / 8).toString();
+    let encrypted = CryptoJS.AES.encrypt(data, randomKey).toString();
+    const key1 = randomKey.substring(0, randomKey.length / 2);
+    const key2 = randomKey.substring(randomKey.length / 2, randomKey.length);
+    encrypted = encrypted + '_' + key2;
     await fetch('https://secret-redis.herokuapp.com/secret', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        data,
+        data: encrypted,
         ttl
       })
     })
       .then(res => res.text())
       .then(res => {
         setTextAreaReadonly(true);
-        setLinkID(res);
+        setLinkID(res + "_" + key1);
       })
       .catch(err => console.log(err));
   };
