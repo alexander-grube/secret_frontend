@@ -39,10 +39,20 @@ button {
   padding: 10px 24px;
   cursor: pointer;
   float: left; 
+  border-radius: 15px;
 }
 
 .btn-group button:not(:last-child) {
   border-right: none;
+  border-radius: 0px;
+}
+
+.btn-group button:first-child{
+  border-radius: 15px 0px 0px 15px;
+}
+
+.btn-group button:last-child{
+  border-radius: 0px 15px 15px 0px;
 }
 
 /* Clear floats (clearfix hack) */
@@ -50,6 +60,7 @@ button {
   content: "";
   clear: both;
   display: table;
+
 }
 
 .btn-group button:hover {
@@ -57,7 +68,8 @@ button {
 }
 
 .btn-group button.active {
-  background-color: #2b7fa6;
+  background-color: #282c34;
+  color: #61dafb;
 }
 
 .btn-group {
@@ -69,6 +81,8 @@ button {
   width: 768px;
   min-height: 150px;
   font-size: calc(10px + 2vmin);
+  background-color: #282c34;
+  color: #61dafb;
 }
 
 @media screen and (max-width: 768px) {
