@@ -13,7 +13,7 @@ function App() {
   const [secret, setSecret] = useState('');
   const secretMessage = useState(() => {
     if (window.location.search.includes('reveal')) {
-      fetch(`https://secret-redis.herokuapp.com/secret/${location.search.split('reveal=')[1].split('_')[0]}`).then(res => res.text()).then(res => {
+      fetch(`https://go-test-secret.azurewebsites.net/api/secret/${location.search.split('reveal=')[1].split('_')[0]}`).then(res => res.text()).then(res => {
         const key1 = location.search.split('reveal=')[1].split('_')[1];
         const key2 = res.split('_')[1];
         setSecret(CryptoJS.AES.decrypt(res, key1+key2).toString(CryptoJS.enc.Utf8));
@@ -68,7 +68,7 @@ function App() {
     const key1 = randomKey.substring(0, randomKey.length / 2);
     const key2 = randomKey.substring(randomKey.length / 2, randomKey.length);
     encrypted = encrypted + '_' + key2;
-    await fetch('https://secret-redis.herokuapp.com/secret', {
+    await fetch('https://go-test-secret.azurewebsites.net/api/secret', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
