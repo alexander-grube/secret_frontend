@@ -4,7 +4,7 @@ import './App.css'
 
 function App() {
   const [data, setData] = useState('');
-  const [ttl, setTtl] = useState(86400000000000);
+  const [ttl, setTtl] = useState(86400);
   const [isActiveHour, setActiveHour] = useState(false);
   const [isActiveDay, setActiveDay] = useState(true);
   const [isActiveWeek, setActiveWeek] = useState(false);
@@ -28,21 +28,21 @@ function App() {
     setActiveHour(true);
     setActiveDay(false);
     setActiveWeek(false);
-    setTtl(3600000000000);
+    setTtl(3600);
   };
 
   const toggleDay = () => {
     setActiveDay(true);
     setActiveHour(false);
     setActiveWeek(false);
-    setTtl(86400000000000);
+    setTtl(86400);
   };
 
   const toggleWeek = () => {
     setActiveWeek(true);
     setActiveHour(false);
     setActiveDay(false);
-    setTtl(604800000000000);
+    setTtl(604800);
   };
 
   const copyToClipBoard = () => {
@@ -68,7 +68,7 @@ function App() {
     const key1 = randomKey.substring(0, randomKey.length / 2);
     const key2 = randomKey.substring(randomKey.length / 2, randomKey.length);
     encrypted = encrypted + '_' + key2;
-    await fetch('https://secret-redis.herokuapp.com/secret', {
+    await fetch('http://localhost:8080/secret', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
